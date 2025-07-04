@@ -89,7 +89,7 @@ class SolarSystem {
   createSolarSystem() {
     this.createStarfield();
     const sunGeometry = new THREE.SphereGeometry(8, 64, 64);
-    const sunTexture = this.textureLoader.load('./src/textures/sun.jpg');
+    const sunTexture = this.textureLoader.load('/textures/sun.jpg');
     sunTexture.colorSpace = THREE.SRGBColorSpace;
     
     const sunMaterial = new THREE.MeshBasicMaterial({ 
@@ -139,10 +139,7 @@ class SolarSystem {
     
     const geometry = new THREE.SphereGeometry(data.size, 32, 32);
     
-    let texturePath = `./src/textures/${data.name.toLowerCase()}.jpg`;
-    if (data.name === 'Earth') {
-      texturePath = './src/textures/earth_daymap.jpg';
-    }
+    let texturePath = `/textures/${data.name.toLowerCase()}.jpg`;
     const texture = this.textureLoader.load(texturePath);
     
     texture.colorSpace = THREE.SRGBColorSpace;
@@ -165,7 +162,7 @@ class SolarSystem {
       group.add(atmosphere);
       
       const moonGeometry = new THREE.SphereGeometry(data.size * 0.27, 16, 16); 
-      const moonTexture = this.textureLoader.load('./src/textures/moon.jpg');
+      const moonTexture = this.textureLoader.load('/textures/moon.jpg');
       moonTexture.colorSpace = THREE.SRGBColorSpace;
       
       const moonMaterial = new THREE.MeshLambertMaterial({
