@@ -1,8 +1,10 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
+//Creates and manages a 3D solar system simulation with interactive planets, realistic lighting, and user controls
 class SolarSystem {
   constructor() {
+    // Core properties
     this.planets = [];
     this.animationSpeed = 1;
     this.isPaused = false;
@@ -20,16 +22,12 @@ class SolarSystem {
   }
 
   init() {
+    // Create the Three.js scene
     this.scene = new THREE.Scene();
 
-    this.camera = new THREE.PerspectiveCamera(
-      45,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
+    // Configure camera with responsive parameters
+    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
     
-    // Set different default camera position based on device type
     const isMobile = window.innerWidth < 768;
     if (isMobile) {
       // More zoomed out position for mobile
@@ -39,6 +37,7 @@ class SolarSystem {
       this.camera.position.set(0, 30, 80);
     }
 
+    // Initialize WebGL renderer with performance optimizations
     this.renderer = new THREE.WebGLRenderer({ 
       antialias: window.devicePixelRatio <= 1,
       powerPreference: 'high-performance'
@@ -55,10 +54,9 @@ class SolarSystem {
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.05;
     
-    // Different control limits based on device type
     if (this.isMobile) {
-      this.controls.maxDistance = 250; // Limit zoom out range
-      this.controls.minDistance = 20;  // Don't let mobile users zoom in too close
+      this.controls.maxDistance = 250; 
+      this.controls.minDistance = 20;
     } else {
       this.controls.maxDistance = 500;
       this.controls.minDistance = 10;
@@ -76,10 +74,8 @@ class SolarSystem {
       // If device type changed (mobile/desktop switch), adjust camera accordingly
       if (wasMobile !== this.isMobile) {
         if (this.isMobile) {
-          // Don't force position change, just adjust controls limits
-          this.controls.maxDistance = 250; // Allow more zoom out on mobile
+          this.controls.maxDistance = 250;
         } else {
-          // Going back to desktop
           this.controls.maxDistance = 500;
         }
       }
@@ -88,18 +84,20 @@ class SolarSystem {
 
   createSolarSystem() {
     this.createStarfield();
+    
+    // Create the Sun with texture map
     const sunGeometry = new THREE.SphereGeometry(8, 64, 64);
     const sunTexture = this.textureLoader.load('/textures/sun.jpg');
     sunTexture.colorSpace = THREE.SRGBColorSpace;
     
     const sunMaterial = new THREE.MeshBasicMaterial({ 
       map: sunTexture,
-      color: 0xffeecc 
     });
     
     this.sun = new THREE.Mesh(sunGeometry, sunMaterial);
     this.scene.add(this.sun);
 
+    // Add light sources - point light for sun and ambient light for general illumination
     const sunLight = new THREE.PointLight(0xffffff, 5, 1000); 
     sunLight.decay = 0; 
     this.scene.add(sunLight);
@@ -107,6 +105,7 @@ class SolarSystem {
     const ambientLight = new THREE.AmbientLight(0x606060, 1.0);
     this.scene.add(ambientLight);
 
+    // Planet data with physical properties
     const planetData = [
       { name: 'Mercury', size: 1.2, distance: 15, speed: 0.02 },
       { name: 'Venus', size: 1.8, distance: 22, speed: 0.015 },
@@ -121,6 +120,8 @@ class SolarSystem {
       const planet = this.createPlanet(data);
       this.planets.push(planet);
       this.scene.add(planet.group);
+      
+      // Create visible orbit ring for each planet
       const orbitGeometry = new THREE.RingGeometry(data.distance - 0.2, data.distance + 0.2, 32);
       const orbitMaterial = new THREE.MeshBasicMaterial({ 
         color: 0xffffff, 
@@ -134,9 +135,11 @@ class SolarSystem {
     });
   }
 
+
   createPlanet(data) {
     const group = new THREE.Group();
     
+    // Create basic planet geometry
     const geometry = new THREE.SphereGeometry(data.size, 32, 32);
     
     let texturePath = `/textures/${data.name.toLowerCase()}.jpg`;
@@ -151,6 +154,7 @@ class SolarSystem {
     const mesh = new THREE.Mesh(geometry, material);
     
     if (data.name === 'Earth') {
+      // Add semi-transparent atmosphere around Earth
       const atmosphereGeometry = new THREE.SphereGeometry(data.size * 1.03, 16, 16);
       const atmosphereMaterial = new THREE.MeshBasicMaterial({
         color: 0x87ceeb,
@@ -161,6 +165,7 @@ class SolarSystem {
       const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
       group.add(atmosphere);
       
+      // Create Earth's moon with its own texture and orbit
       const moonGeometry = new THREE.SphereGeometry(data.size * 0.27, 16, 16); 
       const moonTexture = this.textureLoader.load('/textures/moon.jpg');
       moonTexture.colorSpace = THREE.SRGBColorSpace;
@@ -178,9 +183,10 @@ class SolarSystem {
     }
     
     if (data.name === 'Saturn') {
+      // Create Saturn's distinctive ring system
       const ringGeometry = new THREE.RingGeometry(data.size * 1.2, data.size * 2, 32);
       
-      const ringTexture = this.textureLoader.load('./src/textures/saturn_rings.png');
+      const ringTexture = this.textureLoader.load('/textures/saturn_rings.png');
       ringTexture.colorSpace = THREE.SRGBColorSpace;
       
       const ringMaterial = new THREE.MeshLambertMaterial({
@@ -209,7 +215,9 @@ class SolarSystem {
     };
   }
 
+  //Creates a multi-layered starfield background with depth and varying star sizes
   createStarfield() {
+    // Create star texture using canvas for better performance
     const starCanvas = document.createElement('canvas');
     starCanvas.width = 32;
     starCanvas.height = 32;
@@ -243,6 +251,7 @@ class SolarSystem {
     
     const starTexture = new THREE.CanvasTexture(starCanvas);
     
+    // Define star layers with different distances and visual properties
     const starLayers = [
       { count: 1000, distance: [800, 1200], size: 4.0, opacity: 1.0, color: 0xFFFFFF },
       { count: 2000, distance: [1200, 2000], size: 3.5, opacity: 1.0, color: 0xF0F0F0 },
@@ -310,7 +319,9 @@ class SolarSystem {
     this.scene.add(accentStars);
   }
 
+  //Sets up UI controls for the simulation, including the dropdown panel and interactive sliders for controlling planet speeds
   setupControls() {
+    // Create the main dropdown controls container
     const controlsContainer = document.createElement('div');
     controlsContainer.className = 'dropdown-controls collapsed';
     document.body.appendChild(controlsContainer);
@@ -366,6 +377,7 @@ class SolarSystem {
       controlsContainer.classList.toggle('collapsed');
     });
     
+    // Touch gesture support for mobile devices
     let touchStartY = 0;
     let touchEndY = 0;
     
@@ -394,6 +406,7 @@ class SolarSystem {
       }
     });
     
+    // Create pause/play button with SVG icon
     const pauseButton = document.createElement('button');
     pauseButton.className = 'control-button tooltip button-flex';
     pauseButton.setAttribute('data-tooltip', 'Toggle animation playback');
@@ -476,10 +489,12 @@ class SolarSystem {
     mainSpeedText.className = 'dropdown-main-speed-text';
     mainSpeedText.innerHTML = `
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.58 20 4 16.42 4 12C4 7.58 7.58 4 12 4C16.42 4 20 7.58 20 12C20 16.42 16.42 20 12 20Z" fill="#028ebd"/>
-        <path d="M12.5 7H11V13L16.2 16.2L17 14.9L12.5 12.2V7Z" fill="#028ebd"/>
+        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.58 20 4 16.42 4 12C4 7.58 7.58 4 12 4C16.42 4 20 7.58 20 12C20 16.42 16.42 20 12 20Z" fill="white"/>
+        <circle cx="12" cy="12" r="3" fill="white"/>
+        <path d="M6.5 12C6.5 8.96 8.96 6.5 12 6.5" stroke="white" stroke-width="1.5"/>
+        <path d="M17.5 12C17.5 15.04 15.04 17.5 12 17.5" stroke="white" stroke-width="1.5"/>
       </svg>
-      <span>Global Speed</span>
+      MAIN SPEED
     `;
     mainSpeedLabel.appendChild(mainSpeedText);
     
@@ -566,6 +581,7 @@ class SolarSystem {
     });
   }
 
+  //Sets up event listeners for mouse/touch interaction and tooltip display, handles both desktop and mobile devices with unified event handling
   setupEventListeners() {
     // Create tooltip element
     const tooltip = document.createElement('div');
@@ -677,13 +693,12 @@ class SolarSystem {
     // Get available space and constraints
     const minY = this.controlsContainer ? 
       (this.controlsContainer.classList.contains('collapsed') 
-        ? viewportHeight - 60  // Height of visible part when collapsed
+        ? viewportHeight - 60
         : this.controlsContainer.getBoundingClientRect().top) 
       : viewportHeight - 10;
     
     // Different positioning for mobile vs desktop
     if (isMobile) {
-      // Mobile: center horizontally, place in upper part of screen
       position.x = viewportWidth / 2; // Center (transform will handle exact centering)
       
       // Calculate vertical position away from dropdown
@@ -698,7 +713,6 @@ class SolarSystem {
     }
     
     // Set position based on device type
-    
     if (!isMobile) {
       // On desktop, use the calculated position
       this.tooltip.style.left = `${position.x}px`;
@@ -726,6 +740,7 @@ class SolarSystem {
     this.hoveredObject = object;
   }
   
+  // Hides the tooltip when no object is being hovered
   hideTooltip() {
     if (this.tooltip) {
       this.tooltip.style.display = 'none';
@@ -748,6 +763,7 @@ class SolarSystem {
     return { x, y: y - verticalOffset };
   }
 
+  // Main animation loop for updating planets, handling interactions, and rendering the scene at each frame
   animate() {
     requestAnimationFrame(() => this.animate());
     
@@ -758,11 +774,9 @@ class SolarSystem {
       const viewportHeight = window.innerHeight;
       
       if (!isMobile) {
-        // Desktop positioning
         this.tooltip.style.left = `${screenPos.x}px`;
         this.tooltip.style.top = `${screenPos.y}px`;
       } else {
-        // Mobile positioning with vertical constraints
         let topPosition = screenPos.y;
         
         if (this.controlsContainer) {
@@ -779,13 +793,14 @@ class SolarSystem {
     }
 
     if (!this.isPaused) {
+      // Update planet positions and rotations
       this.planets.forEach(planet => {
         planet.angle += planet.speed * this.animationSpeed;
         planet.group.position.x = Math.cos(planet.angle) * planet.distance;
         planet.group.position.z = Math.sin(planet.angle) * planet.distance;
-        
         planet.mesh.rotation.y += 0.01 * this.animationSpeed;
         
+        // Special handling for Earth's moon
         if (planet.name === 'Earth' && planet.group.userData.moon) {
           const moonAngle = Date.now() * 0.001 * this.animationSpeed;
           const moonDistance = planet.mesh.geometry.parameters.radius * 3;
@@ -795,6 +810,7 @@ class SolarSystem {
         }
       });
       
+      // Animate sun rotation and pulsing effect
       this.sun.rotation.y += 0.002 * this.animationSpeed;
       
       const time = Date.now() * 0.001;
@@ -802,10 +818,12 @@ class SolarSystem {
       this.sun.scale.setScalar(pulse);
     }
 
+    // Cast ray from mouse position to detect object intersections
     this.raycaster.setFromCamera(this.mouse, this.camera);
     
     const objectsToTest = [];
     
+    // Collect all interactive objects (planets, moon, sun)
     this.planets.forEach(planet => {
       objectsToTest.push(planet.mesh);
       
@@ -857,4 +875,5 @@ class SolarSystem {
   }
 }
 
+// Create and initialize the Solar System
 new SolarSystem();
