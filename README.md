@@ -2,9 +2,9 @@
 
 A visually stunning and interactive 3D solar system simulation built with Three.js. This project features realistic planet textures from NASA, physically accurate orbital mechanics, dynamic lighting effects, and a responsive touch-friendly UI that works seamlessly across desktop and mobile devices.
 
-<!-- Consider adding a screenshot of your Solar System here:
-![Solar System Preview](path/to/your/screenshot.png)
--->
+[**🌐 Live Demo**](https://3d-interactive-solar-system.netlify.app/)
+
+![Solar System Preview](src/screenshot/image.png)
 
 ## ✨ Features
 
@@ -145,15 +145,6 @@ Modify the planet data in `main.js` to change:
 - Adjust event handlers in `setupEventListeners()` to change interaction behavior
 - Modify tooltips to display different information
 
-## 🚀 Browser Support
-
-The application is optimized for:
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-- Mobile browsers (iOS Safari, Android Chrome)
-
 ## 📊 Performance Notes
 
 - The application automatically detects device capabilities and adjusts rendering quality
@@ -164,9 +155,3 @@ The application is optimized for:
 ## 📜 License
 
 MIT License - Feel free to use this project for learning, personal projects, or as a base for your own Three.js experiments!
-
-## 🙏 Acknowledgements
-
-- Planet textures courtesy of [NASA](https://www.nasa.gov/)
-- Three.js library and community for documentation and examples
-- Inspiration from various astronomical visualization projects
