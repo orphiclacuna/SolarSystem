@@ -8,17 +8,17 @@ A visually stunning and interactive 3D solar system simulation built with Three.
 
 ## ✨ Features
 
-- 🪐 **Complete Solar System** - All 8 planets with accurate relative sizes and orbital distances
-- 🌙 **Earth's Moon** - Realistic moon with correct orbital mechanics around Earth
-- 💍 **Saturn's Rings** - Detailed rendering of Saturn's iconic ring system
-- 🔆 **Realistic Lighting** - Sun serves as the main light source with physically-based illumination
-- ⚡ **Individual Speed Controls** - Adjust rotation and orbital speed for each planet independently
-- 🌠 **Rich Star Background** - Beautiful multi-layered starfield with thousands of stars
-- 🖱️ **Interactive Navigation** - Intuitive camera control with orbit, zoom, and pan capabilities
-- 📱 **Mobile Optimized** - Responsive design with touch controls and mobile-specific optimizations
-- ⚡ **Performance Focused** - Efficient rendering for smooth framerates even on lower-end devices
-- 🎛️ **Collapsible UI Panel** - Clean, modern dropdown control panel that stays out of the way
-- 💡 **Informative Tooltips** - Hover/tap on planets to display interesting astronomical facts
+-  **Complete Solar System** - All 8 planets with accurate relative sizes and orbital distances
+-  **Earth's Moon** - Realistic moon with correct orbital mechanics around Earth
+-  **Saturn's Rings** - Detailed rendering of Saturn's iconic ring system
+-  **Realistic Lighting** - Sun serves as the main light source with physically-based illumination
+-  **Individual Speed Controls** - Adjust rotation and orbital speed for each planet independently
+-  **Rich Star Background** - Beautiful multi-layered starfield with thousands of stars
+-  **Interactive Navigation** - Intuitive camera control with orbit, zoom, and pan capabilities
+-  **Mobile Optimized** - Responsive design with touch controls and mobile-specific optimizations
+-  **Performance Focused** - Efficient rendering for smooth framerates even on lower-end devices
+-  **Collapsible UI Panel** - Clean, modern dropdown control panel that stays out of the way
+-  **Informative Tooltips** - Hover/tap on planets to display interesting astronomical facts
 
 ## 🛠️ Getting Started
 
